@@ -28,33 +28,33 @@ $rows = db_run($sql, $params)->fetchAll();
 
 $resultLabels = ['AC', 'WA', 'TLE', 'MLE', 'ITLE', 'OTLE', 'CE', 'RE', 'IE'];
 
-render_header('Judging History');
+render_header('채점 기록');
 ?>
-<h1>Judging History</h1>
+<h1>채점 기록</h1>
 
 <form method="get" class="searchbar">
-    <input type="text" name="q" placeholder="Search by User ID / Problem ID / username" value="<?= e($q) ?>">
+    <input type="text" name="q" placeholder="회원 ID / 문제 ID / 이름으로 검색" value="<?= e($q) ?>">
     <select name="result">
-        <option value="">All results</option>
+        <option value="">모든 결과</option>
         <?php foreach ($resultLabels as $r): ?>
             <option value="<?= e($r) ?>" <?= $r === $result ? 'selected' : '' ?>><?= e($r) ?></option>
         <?php endforeach; ?>
     </select>
-    <button class="btn" type="submit">Filter</button>
+    <button class="btn" type="submit">필터링</button>
 </form>
 
 <div class="table-scroll">
 <table class="data">
     <thead>
         <tr>
-            <th>ID</th><th>User</th><th>Problem</th><th>Result</th>
-            <th>Time</th><th>Memory</th><th>Tokens (in/out)</th>
-            <th>Language</th><th>Code Size</th><th>Submitted</th>
+            <th>ID</th><th>사용자</th><th>문제</th><th>결과</th>
+            <th>시간</th><th>메모리</th><th>토큰 (입/출력)</th>
+            <th>언어</th><th>코드 크기</th><th>제출 시간</th>
         </tr>
     </thead>
     <tbody>
     <?php if (!$rows): ?>
-        <tr><td colspan="10" class="muted">No submissions yet.</td></tr>
+        <tr><td colspan="10" class="muted">제출 기록이 없습니다.</td></tr>
     <?php else: foreach ($rows as $s):
         $meta = result_meta($s['result']); ?>
         <tr>

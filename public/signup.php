@@ -23,33 +23,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     );
 
     if ($ok) {
-        flash('Account created. Please log in.', 'ok');
+        flash('계정이 생성되었습니다. 로그인해 주세요.', 'ok');
         redirect('login.php');
     }
     flash($err, 'bad');
 }
 
-render_header('Sign Up');
+render_header('회원가입');
 ?>
-<h1>Sign Up</h1>
+<h1>회원가입</h1>
 <form method="post" class="card form">
-    <label>Username (ID)
+    <label>아이디
         <input type="text" name="username" value="<?= e($values['username']) ?>" required>
     </label>
-    <label>Password
+    <label>비밀번호
         <input type="password" name="password" required minlength="6">
     </label>
-    <label>Name
+    <label>이름
         <input type="text" name="name" value="<?= e($values['name']) ?>" required>
     </label>
-    <label>Email
+    <label>이메일
         <input type="email" name="email" value="<?= e($values['email']) ?>" required>
     </label>
-    <label>Affiliation (University / Company)
+    <label>소속 (학교 / 직장)
         <input type="text" name="affiliation" value="<?= e($values['affiliation']) ?>">
     </label>
-    <button class="btn btn-primary" type="submit">Create account</button>
-    <p class="muted">Already have an account? <a href="<?= e(url('login.php')) ?>">Log in</a>.</p>
+    <button class="btn btn-primary" type="submit">계정 생성</button>
+    <p class="muted">이미 계정이 있으신가요? <a href="<?= e(url('login.php')) ?>">로그인</a>.</p>
 </form>
 <?php
 render_footer();

@@ -21,22 +21,22 @@ $sql .= ' GROUP BY p.id, p.title ORDER BY p.id';
 
 $problems = db_run($sql, $params)->fetchAll();
 
-render_header('Problems');
+render_header('문제 모음');
 ?>
-<h1>Problem List</h1>
+<h1>문제 목록</h1>
 
 <form method="get" class="searchbar">
-    <input type="text" name="q" placeholder="Search by Problem ID or Title" value="<?= e($search) ?>">
-    <button class="btn" type="submit">Search</button>
+    <input type="text" name="q" placeholder="문제 ID 또는 제목으로 검색" value="<?= e($search) ?>">
+    <button class="btn" type="submit">검색</button>
 </form>
 
 <table class="data">
     <thead>
-        <tr><th>ID</th><th>Title</th><th>Submissions</th><th>Accepted</th></tr>
+        <tr><th>ID</th><th>제목</th><th>제출수</th><th>맞은 사람 수</th></tr>
     </thead>
     <tbody>
     <?php if (!$problems): ?>
-        <tr><td colspan="4" class="muted">No problems found.</td></tr>
+        <tr><td colspan="4" class="muted">문제를 찾을 수 없습니다.</td></tr>
     <?php else: foreach ($problems as $p): ?>
         <tr>
             <td><?= (int) $p['id'] ?></td>

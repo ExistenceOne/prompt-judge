@@ -35,8 +35,8 @@ function render_header(string $title = ''): void
 <header class="site-header">
     <nav class="nav-left">
         <a class="brand" href="<?= e(url('index.php')) ?>"><?= e($site) ?></a>
-        <a href="<?= e(url('problems.php')) ?>">Problems</a>
-        <a href="<?= e(url('history.php')) ?>">Judging History</a>
+        <a href="<?= e(url('problems.php')) ?>">문제</a>
+        <a href="<?= e(url('history.php')) ?>">채점</a>
     </nav>
     <nav class="nav-right">
         <button type="button" id="theme-toggle" class="theme-toggle" title="Toggle dark mode">🌓</button>

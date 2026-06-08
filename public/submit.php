@@ -9,8 +9,8 @@ $problem   = db_run('SELECT * FROM problems WHERE id = ?', [$problemId])->fetch(
 
 if (!$problem) {
     http_response_code(404);
-    render_header('Not Found');
-    echo '<h1>Problem not found</h1>';
+    render_header('찾을 수 없음');
+    echo '<h1>문제를 찾을 수 없습니다.</h1>';
     render_footer();
     exit;
 }
@@ -36,13 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $errors = [];
     if (!isset($models[$form['model']])) {
-        $errors[] = 'Please choose a valid model.';
+        $errors[] = '올바른 모델을 선택해 주세요.';
     }
     if (judge0_language_name($form['language_id']) === 'Unknown') {
-        $errors[] = 'Please choose a valid target language.';
+        $errors[] = '올바른 대상 언어를 선택해 주세요.';
     }
     if ($form['prompt'] === '') {
-        $errors[] = 'Your prompt cannot be empty.';
+        $errors[] = '프롬프트는 비워둘 수 없습니다.';
     }
 
     if (!$errors) {
@@ -64,17 +64,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-render_header('Submit · ' . $problem['title']);
+render_header('제출 · ' . $problem['title']);
 ?>
-<h1>Submit a Prompt</h1>
+<h1>프롬프트 작성</h1>
 <p class="muted">
-    Problem: <a href="<?= e(url('problem.php?id=' . $problem['id'])) ?>">#<?= (int) $problem['id'] ?> · <?= e($problem['title']) ?></a>
-    — Token limits: in <?= (int) $problem['input_token_limit'] ?> / out <?= (int) $problem['output_token_limit'] ?>
+    문제: <a href="<?= e(url('problem.php?id=' . $problem['id'])) ?>">#<?= (int) $problem['id'] ?> · <?= e($problem['title']) ?></a>
+    — 토큰 제한: 입력 <?= (int) $problem['input_token_limit'] ?> / 출력 <?= (int) $problem['output_token_limit'] ?>
 </p>
 
 <form method="post" class="card form">
     <div class="grid-2">
-        <label>Model
+        <label>모델
             <select name="model">
                 <?php foreach ($models as $id => $m): ?>
                     <option value="<?= e($id) ?>" <?= $id === $form['model'] ? 'selected' : '' ?>>
@@ -83,7 +83,7 @@ render_header('Submit · ' . $problem['title']);
                 <?php endforeach; ?>
             </select>
         </label>
-        <label>Target Language
+        <label>대상 언어
             <select name="language_id">
                 <?php foreach ($languages as $lang): ?>
                     <option value="<?= (int) $lang['id'] ?>" <?= (int) $lang['id'] === $form['language_id'] ? 'selected' : '' ?>>
@@ -104,14 +104,14 @@ render_header('Submit · ' . $problem['title']);
                    value="<?= e($form['top_p']) ?>" oninput="document.getElementById('topp-val').textContent=this.value">
         </label>
     </div>
-    <p class="muted small">Note: temperature / top-p apply only to models that support them; newer Opus models ignore these.</p>
+    <p class="muted small">참고: temperature / top-p는 이를 지원하는 모델에만 적용됩니다. 최신 모델들은 이를 무시할 수 있습니다.</p>
 
-    <label>Prompt
-        <textarea name="prompt" rows="12" placeholder="Describe the program the AI should write. It must read stdin and print to stdout."><?= e($form['prompt']) ?></textarea>
+    <label>프롬프트
+        <textarea name="prompt" rows="12" placeholder="AI가 작성해야 할 프로그램을 설명하세요. 표준 입력(stdin)에서 읽고 표준 출력(stdout)으로 내용을 출력해야 합니다."><?= e($form['prompt']) ?></textarea>
     </label>
 
-    <button class="btn btn-primary" type="submit">Generate &amp; Judge</button>
-    <p class="muted small">This calls Claude and Judge0 and may take a few seconds.</p>
+    <button class="btn btn-primary" type="submit">생성 및 채점</button>
+    <p class="muted small">요청을 처리하는 데 몇 초 정도 걸릴 수 있습니다.</p>
 </form>
 <?php
 render_footer();

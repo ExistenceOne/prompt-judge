@@ -22,23 +22,23 @@ $solved = db_run(
     [$user['id']]
 )->fetchAll();
 
-render_header('My Page');
+render_header('마이페이지');
 ?>
-<h1>My Page</h1>
+<h1>마이페이지</h1>
 
 <section class="card">
     <h2><?= e($user['name']) ?> <span class="muted">@<?= e($user['username']) ?></span></h2>
     <p class="muted"><?= e($user['email']) ?><?= $user['affiliation'] ? ' · ' . e($user['affiliation']) : '' ?></p>
     <div class="stats">
-        <div><span class="num"><?= (int) $stats['total'] ?></span><span class="muted">Submissions</span></div>
-        <div><span class="num"><?= (int) $stats['accepted'] ?></span><span class="muted">Accepted</span></div>
-        <div><span class="num"><?= count($solved) ?></span><span class="muted">Problems solved</span></div>
+        <div><span class="num"><?= (int) $stats['total'] ?></span><span class="muted">제출</span></div>
+        <div><span class="num"><?= (int) $stats['accepted'] ?></span><span class="muted">맞았습니다</span></div>
+        <div><span class="num"><?= count($solved) ?></span><span class="muted">해결한 문제</span></div>
     </div>
 </section>
 
-<h2>Solved Problems</h2>
+<h2>해결한 문제</h2>
 <?php if (!$solved): ?>
-    <p class="muted">No problems solved yet. <a href="<?= e(url('problems.php')) ?>">Find one to try!</a></p>
+    <p class="muted">아직 해결한 문제가 없습니다. <a href="<?= e(url('problems.php')) ?>">도전해 보세요!</a></p>
 <?php else: ?>
     <ul class="solved-list">
         <?php foreach ($solved as $p): ?>

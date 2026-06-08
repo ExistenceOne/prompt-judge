@@ -6,6 +6,9 @@ CREATE DATABASE IF NOT EXISTS prompt_judge
 USE prompt_judge;
 
 -- Drop in dependency order so re-running the script is safe.
+DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS submissions;
 DROP TABLE IF EXISTS testcases;
 DROP TABLE IF EXISTS problems;
@@ -77,3 +80,56 @@ CREATE TABLE submissions (
 CREATE INDEX idx_submissions_user    ON submissions(user_id);
 CREATE INDEX idx_submissions_problem ON submissions(problem_id);
 CREATE INDEX idx_submissions_result  ON submissions(result);
+
+-- ---------------------------------------------------------------------------
+-- Community boards
+-- ---------------------------------------------------------------------------
+
+-- Community posts. category is one of: notice / free / qna.
+-- problem_id is optional (a post may reference a specific problem).
+CREATE TABLE posts (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    user_id     INT NOT NULL,
+    category    VARCHAR(10)  NOT NULL,
+    problem_id  INT          DEFAULT NULL,
+    title       VARCHAR(200) NOT NULL,
+    body        MEDIUMTEXT   NOT NULL,
+    created_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME     DEFAULT NULL,
+    FOREIGN KEY (user_id)    REFERENCES users(id)    ON DELETE CASCADE,
+    FOREIGN KEY (problem_id) REFERENCES problems(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE INDEX idx_posts_category ON posts(category);
+CREATE INDEX idx_posts_user     ON posts(user_id);
+
+-- Comments on posts.
+CREATE TABLE comments (
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    post_id    INT  NOT NULL,
+    user_id    INT  NOT NULL,
+    body       TEXT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT NULL,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE INDEX idx_comments_post ON comments(post_id);
+
+-- Per-user notifications (e.g. a reply to one of your posts).
+CREATE TABLE notifications (
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    user_id    INT NOT NULL,            -- recipient
+    actor_id   INT DEFAULT NULL,        -- who triggered it
+    type       VARCHAR(20)  NOT NULL,   -- e.g. 'comment'
+    post_id    INT DEFAULT NULL,        -- where it points
+    message    VARCHAR(255) NOT NULL,
+    is_read    TINYINT(1)   NOT NULL DEFAULT 0,
+    created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id)  REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (actor_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (post_id)  REFERENCES posts(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE INDEX idx_notifications_user ON notifications(user_id, is_read);

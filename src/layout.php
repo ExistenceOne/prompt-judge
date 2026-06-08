@@ -37,10 +37,15 @@ function render_header(string $title = ''): void
         <a class="brand" href="<?= e(url('index.php')) ?>"><?= e($site) ?></a>
         <a href="<?= e(url('problems.php')) ?>">문제</a>
         <a href="<?= e(url('history.php')) ?>">채점</a>
+        <a href="<?= e(url('board.php')) ?>">게시판</a>
     </nav>
     <nav class="nav-right">
         <button type="button" id="theme-toggle" class="theme-toggle" title="Toggle dark mode">🌓</button>
         <?php if ($user): ?>
+            <?php $unread = unread_notification_count((int) $user['id']); ?>
+            <a href="<?= e(url('notifications.php')) ?>" class="bell" title="Notifications">
+                🔔<?php if ($unread > 0): ?><span class="badge"><?= $unread > 9 ? '9+' : (int) $unread ?></span><?php endif; ?>
+            </a>
             <a href="<?= e(url('mypage.php')) ?>" class="username"><?= e($user['name']) ?></a>
             <a href="<?= e(url('logout.php')) ?>" class="btn btn-sm">Logout</a>
         <?php else: ?>

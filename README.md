@@ -59,11 +59,16 @@ prompt-judge/
 │   ├── index.php signup.php login.php logout.php
 │   ├── problems.php problem.php submit.php
 │   ├── history.php judging.php mypage.php
+│   ├── board.php post.php post_form.php post_delete.php   # community boards
+│   ├── comment_create.php comment_edit.php comment_delete.php
+│   ├── notifications.php
 │   └── assets/css/style.css, assets/js/app.js
 ├── src/             # Shared logic (kept OUT of the web root)
 │   ├── bootstrap.php db.php auth.php helpers.php layout.php
 │   ├── claude.php       # Anthropic Messages API client (cURL)
 │   ├── judge0.php       # Judge0 client + language/status lookups
+│   ├── community.php    # board categories + post/comment lookups
+│   ├── notifications.php# create + read notifications
 │   └── pipeline.php     # run_submission(): the full judging pipeline
 ├── config/
 │   ├── config.example.php  # template (committed)
@@ -75,8 +80,10 @@ prompt-judge/
 ```
 
 > Implemented so far: the **Core MVP** — authentication, problem list/detail, the
-> prompt submission + judging pipeline, and Judging History. Community boards,
-> comments, notifications, and the settings page are planned for a later pass.
+> prompt submission + judging pipeline, and Judging History — plus the
+> **community boards** (Notice / Free / Q&A) with comments and per-user
+> **notifications** (a bell badge in the header plus a notifications page). The
+> dedicated settings page is the one remaining piece from the original spec.
 
 ## Getting Started (Local Setup — XAMPP/WAMP)
 

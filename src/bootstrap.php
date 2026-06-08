@@ -35,4 +35,6 @@ if (session_status() === PHP_SESSION_NONE) {
 require SRC_PATH . '/helpers.php';
 require SRC_PATH . '/db.php';
 require SRC_PATH . '/auth.php';
+require SRC_PATH . '/community.php';
+require SRC_PATH . '/notifications.php';
 require SRC_PATH . '/layout.php';

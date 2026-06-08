@@ -9,12 +9,12 @@ $userId = (int) $user['id'];
 $items = user_notifications($userId);
 mark_notifications_read($userId);
 
-render_header('Notifications');
+render_header('알림');
 ?>
-<h1>Notifications</h1>
+<h1>알림</h1>
 
 <?php if (!$items): ?>
-    <p class="muted">You have no notifications.</p>
+    <p class="muted">알림이 없습니다.</p>
 <?php else: ?>
     <ul class="notif-list">
         <?php foreach ($items as $n): ?>

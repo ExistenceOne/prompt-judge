@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 function board_categories(): array
 {
-    return ['notice' => 'Notice', 'free' => 'Free', 'qna' => 'Q&A'];
+    return ['notice' => '공지사항', 'free' => '자유게시판', 'qna' => 'Q&A'];
 }
 
 /**

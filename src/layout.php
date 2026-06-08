@@ -43,13 +43,13 @@ function render_header(string $title = ''): void
         <button type="button" id="theme-toggle" class="theme-toggle" title="Toggle dark mode">🌓</button>
         <?php if ($user): ?>
             <?php $unread = unread_notification_count((int) $user['id']); ?>
-            <a href="<?= e(url('notifications.php')) ?>" class="bell" title="Notifications">
+            <a href="<?= e(url('notifications.php')) ?>" class="bell" title="알림">
                 🔔<?php if ($unread > 0): ?><span class="badge"><?= $unread > 9 ? '9+' : (int) $unread ?></span><?php endif; ?>
             </a>
             <a href="<?= e(url('mypage.php')) ?>" class="username"><?= e($user['name']) ?></a>
-            <a href="<?= e(url('logout.php')) ?>" class="btn btn-sm">Logout</a>
+            <a href="<?= e(url('logout.php')) ?>" class="btn btn-sm">로그아웃</a>
         <?php else: ?>
-            <a href="<?= e(url('login.php')) ?>" class="btn btn-sm">Login</a>
+            <a href="<?= e(url('login.php')) ?>" class="btn btn-sm">로그인</a>
         <?php endif; ?>
     </nav>
 </header>

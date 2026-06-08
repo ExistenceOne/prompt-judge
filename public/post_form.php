@@ -12,13 +12,13 @@ if ($editing) {
     $post = find_post($editId);
     if (!$post) {
         http_response_code(404);
-        render_header('Not Found');
-        echo '<h1>Post not found</h1>';
+        render_header('찾을 수 없음');
+        echo '<h1>게시글을 찾을 수 없습니다</h1>';
         render_footer();
         exit;
     }
     if (!owns($post, (int) $user['id'])) {
-        flash('You can only edit your own posts.', 'bad');
+        flash('자신의 게시글만 수정할 수 있습니다.', 'bad');
         redirect('post.php?id=' . $editId);
     }
 }
@@ -39,24 +39,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $errors = [];
     if (!is_valid_category($values['category'])) {
-        $errors[] = 'Please choose a valid category.';
+        $errors[] = '올바른 카테고리를 선택해 주세요.';
     }
     if ($values['title'] === '') {
-        $errors[] = 'Title is required.';
+        $errors[] = '제목이 필요합니다.';
     }
     if ($values['body'] === '') {
-        $errors[] = 'Content is required.';
+        $errors[] = '내용이 필요합니다.';
     }
 
     // Optional problem link: blank => null; otherwise must be a real problem.
     $problemId = null;
     if ($values['problem_id'] !== '') {
         if (!ctype_digit($values['problem_id'])) {
-            $errors[] = 'Related Problem ID must be a number.';
+            $errors[] = '관련 문제 ID는 숫자여야 합니다.';
         } else {
             $problemId = (int) $values['problem_id'];
             if (!db_run('SELECT 1 FROM problems WHERE id = ?', [$problemId])->fetch()) {
-                $errors[] = "Problem #{$problemId} does not exist.";
+                $errors[] = "문제 #{$problemId}이(가) 존재하지 않습니다.";
             }
         }
     }
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              WHERE id = ?',
             [$values['category'], $problemId, $values['title'], $values['body'], $editId]
         );
-        flash('Post updated.', 'ok');
+        flash('게시글이 수정되었습니다.', 'ok');
         redirect('post.php?id=' . $editId);
     } else {
         db_run(
@@ -80,33 +80,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             [$user['id'], $values['category'], $problemId, $values['title'], $values['body']]
         );
         $newId = (int) db()->lastInsertId();
-        flash('Post created.', 'ok');
+        flash('게시글이 작성되었습니다.', 'ok');
         redirect('post.php?id=' . $newId);
     }
 }
 
-render_header($editing ? 'Edit Post' : 'New Post');
+render_header($editing ? '게시글 수정' : '새 글 쓰기');
 ?>
-<h1><?= $editing ? 'Edit Post' : 'New Post' ?></h1>
+<h1><?= $editing ? '게시글 수정' : '새 글 쓰기' ?></h1>
 <form method="post" class="card form">
-    <label>Category
+    <label>카테고리
         <select name="category">
             <?php foreach (board_categories() as $code => $label): ?>
                 <option value="<?= e($code) ?>" <?= $values['category'] === $code ? 'selected' : '' ?>><?= e($label) ?></option>
             <?php endforeach; ?>
         </select>
     </label>
-    <label>Related Problem ID <span class="muted">(optional)</span>
-        <input type="number" name="problem_id" min="1" value="<?= e((string) $values['problem_id']) ?>" placeholder="e.g. 1">
+    <label>관련 문제 ID <span class="muted">(선택사항)</span>
+        <input type="number" name="problem_id" min="1" value="<?= e((string) $values['problem_id']) ?>" placeholder="예: 1">
     </label>
-    <label>Title
+    <label>제목
         <input type="text" name="title" value="<?= e($values['title']) ?>" required maxlength="200">
     </label>
-    <label>Content
+    <label>내용
         <textarea name="body" rows="12" required><?= e($values['body']) ?></textarea>
     </label>
-    <button class="btn btn-primary" type="submit"><?= $editing ? 'Save changes' : 'Publish' ?></button>
-    <a class="btn" href="<?= e(url($editing ? 'post.php?id=' . $editId : 'board.php')) ?>">Cancel</a>
+    <button class="btn btn-primary" type="submit"><?= $editing ? '변경사항 저장' : '등록' ?></button>
+    <a class="btn" href="<?= e(url($editing ? 'post.php?id=' . $editId : 'board.php')) ?>">취소</a>
 </form>
 <?php
 render_footer();

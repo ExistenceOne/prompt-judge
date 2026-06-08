@@ -13,11 +13,11 @@ $body   = post('body');
 $post   = $postId > 0 ? find_post($postId) : null;
 
 if (!$post) {
-    flash('Post not found.', 'bad');
+    flash('게시글을 찾을 수 없습니다.', 'bad');
     redirect('board.php');
 }
 if ($body === '') {
-    flash('Comment cannot be empty.', 'bad');
+    flash('댓글은 비워둘 수 없습니다.', 'bad');
     redirect('post.php?id=' . $postId);
 }
 
@@ -32,8 +32,8 @@ notify(
     (int) $user['id'],
     'comment',
     $postId,
-    $user['name'] . ' commented on your post "' . $post['title'] . '"'
+    $user['name'] . '님이 귀하의 게시글 "' . $post['title'] . '"에 댓글을 남겼습니다.'
 );
 
-flash('Comment posted.', 'ok');
+flash('댓글이 등록되었습니다.', 'ok');
 redirect('post.php?id=' . $postId . '#comments');

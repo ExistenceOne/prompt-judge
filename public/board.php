@@ -34,17 +34,17 @@ $sql .= ' GROUP BY p.id, p.category, p.problem_id, p.title, p.created_at, u.user
 
 $posts = db_run($sql, $params)->fetchAll();
 
-render_header('Community');
+render_header('게시판');
 ?>
 <div class="page-head">
-    <h1>Community</h1>
+    <h1>게시판</h1>
     <?php if (current_user()): ?>
-        <a class="btn btn-primary" href="<?= e(url('post_form.php' . ($category !== '' ? '?category=' . $category : ''))) ?>">New Post</a>
+        <a class="btn btn-primary" href="<?= e(url('post_form.php' . ($category !== '' ? '?category=' . $category : ''))) ?>">새 글 쓰기</a>
     <?php endif; ?>
 </div>
 
 <nav class="tabs">
-    <a class="<?= $category === '' ? 'active' : '' ?>" href="<?= e(url('board.php')) ?>">All</a>
+    <a class="<?= $category === '' ? 'active' : '' ?>" href="<?= e(url('board.php')) ?>">전체</a>
     <?php foreach (board_categories() as $code => $label): ?>
         <a class="<?= $category === $code ? 'active' : '' ?>" href="<?= e(url('board.php?category=' . $code)) ?>"><?= e($label) ?></a>
     <?php endforeach; ?>
@@ -54,21 +54,21 @@ render_header('Community');
     <?php if ($category !== ''): ?>
         <input type="hidden" name="category" value="<?= e($category) ?>">
     <?php endif; ?>
-    <input type="text" name="q" placeholder="Search by Title or Author" value="<?= e($q) ?>">
-    <button class="btn" type="submit">Search</button>
+    <input type="text" name="q" placeholder="제목 또는 작성자로 검색" value="<?= e($q) ?>">
+    <button class="btn" type="submit">검색</button>
 </form>
 
 <div class="table-scroll">
 <table class="data">
     <thead>
         <tr>
-            <th>ID</th><th>Category</th><th>Problem</th><th>Title</th>
-            <th>Comments</th><th>Author</th><th>Date</th>
+            <th>ID</th><th>분류</th><th>문제</th><th>제목</th>
+            <th>댓글</th><th>작성자</th><th>작성일</th>
         </tr>
     </thead>
     <tbody>
     <?php if (!$posts): ?>
-        <tr><td colspan="7" class="muted">No posts yet.</td></tr>
+        <tr><td colspan="7" class="muted">게시글이 없습니다.</td></tr>
     <?php else: foreach ($posts as $p): ?>
         <tr>
             <td><?= (int) $p['id'] ?></td>

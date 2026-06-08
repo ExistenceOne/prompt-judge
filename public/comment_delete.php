@@ -12,15 +12,15 @@ $id      = (int) post('id', '0');
 $comment = $id > 0 ? find_comment($id) : null;
 
 if (!$comment) {
-    flash('Comment not found.', 'bad');
+    flash('댓글을 찾을 수 없습니다.', 'bad');
     redirect('board.php');
 }
 if (!owns($comment, (int) $user['id'])) {
-    flash('You can only delete your own comments.', 'bad');
+    flash('자신의 댓글만 삭제할 수 있습니다.', 'bad');
     redirect('post.php?id=' . $comment['post_id']);
 }
 
 $postId = (int) $comment['post_id'];
 db_run('DELETE FROM comments WHERE id = ?', [$id]);
-flash('Comment deleted.', 'ok');
+flash('댓글이 삭제되었습니다.', 'ok');
 redirect('post.php?id=' . $postId . '#comments');

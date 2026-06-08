@@ -1,0 +1,12 @@
+# Prompt Judge — Apache config for the public/ docroot.
+
+# Don't list directory contents.
+Options -Indexes
+
+# Default to the home page.
+DirectoryIndex index.php
+
+# Defense in depth: never serve dotfiles (e.g. accidental .env).
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

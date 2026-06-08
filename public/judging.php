@@ -1,0 +1,67 @@
+<?php
+require __DIR__ . '/../src/bootstrap.php';
+require_once SRC_PATH . '/judge0.php';
+
+$id = query_int('id');
+$s  = db_run(
+    'SELECT s.*, u.username, p.title AS problem_title
+     FROM submissions s
+     JOIN users u ON u.id = s.user_id
+     JOIN problems p ON p.id = s.problem_id
+     WHERE s.id = ?',
+    [$id]
+)->fetch();
+
+if (!$s) {
+    http_response_code(404);
+    render_header('Not Found');
+    echo '<h1>Submission not found</h1>';
+    render_footer();
+    exit;
+}
+
+$meta = result_meta($s['result']);
+
+render_header('Judging #' . $s['id']);
+?>
+<h1>Judging Detail #<?= (int) $s['id'] ?></h1>
+
+<div class="verdict-banner verdict-<?= e($meta['kind']) ?>">
+    <strong><?= e($meta['label']) ?></strong> — <?= e($meta['text']) ?>
+</div>
+
+<table class="kv">
+    <tr><th>Problem</th><td><a href="<?= e(url('problem.php?id=' . $s['problem_id'])) ?>">#<?= (int) $s['problem_id'] ?> · <?= e($s['problem_title']) ?></a></td></tr>
+    <tr><th>User</th><td><?= e($s['username']) ?></td></tr>
+    <tr><th>Model</th><td><?= e($s['model']) ?></td></tr>
+    <tr><th>Language</th><td><?= e($s['language_name']) ?></td></tr>
+    <tr><th>Temperature / Top-p</th><td><?= e((string) ($s['temperature'] ?? '—')) ?> / <?= e((string) ($s['top_p'] ?? '—')) ?></td></tr>
+    <tr><th>Tokens (in / out)</th><td><?= ($s['input_tokens'] ?? '—') ?> / <?= ($s['output_tokens'] ?? '—') ?></td></tr>
+    <tr><th>Execution Time</th><td><?= $s['exec_time_ms'] !== null ? (int) $s['exec_time_ms'] . ' ms' : '—' ?></td></tr>
+    <tr><th>Memory</th><td><?= $s['memory_kb'] !== null ? (int) $s['memory_kb'] . ' KB' : '—' ?></td></tr>
+    <tr><th>Code Size</th><td><?= $s['code_size'] !== null ? (int) $s['code_size'] . ' bytes' : '—' ?></td></tr>
+    <?php if ($s['judge0_status_id'] !== null): ?>
+        <tr><th>Judge0 Status</th><td><?= e(judge0_status_text((int) $s['judge0_status_id'])) ?></td></tr>
+    <?php endif; ?>
+    <tr><th>Submitted</th><td><?= e($s['created_at']) ?></td></tr>
+</table>
+
+<h2>Prompt</h2>
+<pre class="block"><?= e($s['prompt']) ?></pre>
+
+<?php if (!empty($s['generated_code'])): ?>
+    <h2>Generated Source Code</h2>
+    <pre class="block code"><?= e($s['generated_code']) ?></pre>
+<?php endif; ?>
+
+<?php if (!empty($s['compile_output'])): ?>
+    <h2>Compiler Output</h2>
+    <pre class="block error"><?= e($s['compile_output']) ?></pre>
+<?php endif; ?>
+
+<?php if (!empty($s['stderr'])): ?>
+    <h2>Error Log</h2>
+    <pre class="block error"><?= e($s['stderr']) ?></pre>
+<?php endif; ?>
+<?php
+render_footer();

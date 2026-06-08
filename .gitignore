@@ -471,3 +471,7 @@ composer.lock
 *.css.map
 *.sass.map
 *.scss.map
+
+##### Prompt Judge
+# Real secrets (DB creds, Claude + Judge0 keys). Use config/config.example.php as the template.
+/config/config.php

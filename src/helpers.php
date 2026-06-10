@@ -95,17 +95,19 @@ function result_meta(string $code): array
 /**
  * The AI model options offered on the submission page.
  *
- * Note: Opus 4.7/4.8 reject `temperature`/`top_p` (HTTP 400). Models flagged
- * `sampling => false` here will have those parameters omitted from the API call
- * (see src/claude.php). The slider values are still recorded for history.
+ * Note: Opus 4.7/4.8 reject `temperature` (HTTP 400). Models flagged
+ * `sampling => false` here will have that parameter omitted from the API call
+ * (see src/claude.php). Models flagged `thinking => true` support extended
+ * thinking via a `budget_tokens` parameter; when enabled, `temperature` is
+ * omitted instead (the API rejects sampling params alongside thinking).
  *
- * @return array<string, array{label:string, sampling:bool}>
+ * @return array<string, array{label:string, sampling:bool, thinking:bool}>
  */
 function model_options(): array
 {
     return [
-        'claude-sonnet-4-6'          => ['label' => 'Claude Sonnet 4.6 (default)', 'sampling' => true],
-        'claude-haiku-4-5'           => ['label' => 'Claude Haiku 4.5 (fast)',     'sampling' => true],
-        'claude-opus-4-8'            => ['label' => 'Claude Opus 4.8 (most capable)', 'sampling' => false],
+        'claude-sonnet-4-6'          => ['label' => 'Claude Sonnet 4.6 (default)', 'sampling' => true, 'thinking' => true],
+        'claude-haiku-4-5'           => ['label' => 'Claude Haiku 4.5 (fast)',     'sampling' => true, 'thinking' => true],
+        'claude-opus-4-8'            => ['label' => 'Claude Opus 4.8 (most capable)', 'sampling' => false, 'thinking' => true],
     ];
 }

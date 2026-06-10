@@ -20,19 +20,19 @@ $languages = judge0_languages();
 
 // Form defaults / submitted values.
 $form = [
-    'model'       => array_key_first($models),
-    'language_id' => 71, // Python (3.8.1)
-    'temperature' => '1.0',
-    'top_p'       => '1.0',
-    'prompt'      => '',
+    'model'           => array_key_first($models),
+    'language_id'     => 71, // Python (3.8.1)
+    'temperature'     => '1.0',
+    'thinking_budget' => '0',
+    'prompt'          => '',
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $form['model']       = post('model', $form['model']);
-    $form['language_id'] = (int) post('language_id', (string) $form['language_id']);
-    $form['temperature'] = post('temperature', $form['temperature']);
-    $form['top_p']       = post('top_p', $form['top_p']);
-    $form['prompt']      = post('prompt');
+    $form['model']           = post('model', $form['model']);
+    $form['language_id']     = (int) post('language_id', (string) $form['language_id']);
+    $form['temperature']     = post('temperature', $form['temperature']);
+    $form['thinking_budget'] = post('thinking_budget', $form['thinking_budget']);
+    $form['prompt']          = post('prompt');
 
     $errors = [];
     if (!isset($models[$form['model']])) {
@@ -44,6 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($form['prompt'] === '') {
         $errors[] = 'Your prompt cannot be empty.';
     }
+    $thinkingBudget = is_numeric($form['thinking_budget']) ? (int) $form['thinking_budget'] : 0;
+    if ($thinkingBudget !== 0 && $thinkingBudget < 1024) {
+        $errors[] = 'Thinking budget must be 0 (off) or at least 1024 tokens.';
+    }
 
     if (!$errors) {
         $user = current_user();
@@ -53,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $form['language_id'],
             $form['model'],
             is_numeric($form['temperature']) ? (float) $form['temperature'] : null,
-            is_numeric($form['top_p']) ? (float) $form['top_p'] : null,
+            $thinkingBudget !== 0 ? $thinkingBudget : null,
             $form['prompt']
         );
         redirect('judging.php?id=' . $submissionId);
@@ -99,12 +103,15 @@ render_header('Submit · ' . $problem['title']);
             <input type="range" name="temperature" min="0" max="1" step="0.05"
                    value="<?= e($form['temperature']) ?>" oninput="document.getElementById('temp-val').textContent=this.value">
         </label>
-        <label>Top-p: <output id="topp-val"><?= e($form['top_p']) ?></output>
-            <input type="range" name="top_p" min="0" max="1" step="0.05"
-                   value="<?= e($form['top_p']) ?>" oninput="document.getElementById('topp-val').textContent=this.value">
+        <label>Thinking budget (tokens): <output id="budget-val"><?= e($form['thinking_budget']) ?></output>
+            <input type="range" name="thinking_budget" min="0" max="12000" step="1024"
+                   value="<?= e($form['thinking_budget']) ?>" oninput="document.getElementById('budget-val').textContent=this.value">
         </label>
     </div>
-    <p class="muted small">Note: temperature / top-p apply only to models that support them; newer Opus models ignore these.</p>
+    <p class="muted small">
+        Note: 0 disables extended thinking. Otherwise, at least 1024 tokens are required.
+        When extended thinking is enabled, temperature is ignored (the API does not allow both).
+    </p>
 
     <label>Prompt
         <textarea name="prompt" rows="12" placeholder="Describe the program the AI should write. It must read stdin and print to stdout."><?= e($form['prompt']) ?></textarea>

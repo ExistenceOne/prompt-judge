@@ -59,7 +59,7 @@ CREATE TABLE submissions (
     language_name    VARCHAR(100) NOT NULL,
     model            VARCHAR(100) NOT NULL,
     temperature      DECIMAL(3,2) DEFAULT NULL,
-    top_p            DECIMAL(3,2) DEFAULT NULL,
+    thinking_budget  INT          DEFAULT NULL,
     prompt           TEXT NOT NULL,
     generated_code   MEDIUMTEXT   DEFAULT NULL,
     input_tokens     INT DEFAULT NULL,

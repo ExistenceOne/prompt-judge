@@ -35,7 +35,8 @@ render_header('Judging #' . $s['id']);
     <tr><th>User</th><td><?= e($s['username']) ?></td></tr>
     <tr><th>Model</th><td><?= e($s['model']) ?></td></tr>
     <tr><th>Language</th><td><?= e($s['language_name']) ?></td></tr>
-    <tr><th>Temperature / Top-p</th><td><?= e((string) ($s['temperature'] ?? '—')) ?> / <?= e((string) ($s['top_p'] ?? '—')) ?></td></tr>
+    <tr><th>Temperature</th><td><?= e((string) ($s['temperature'] ?? '—')) ?></td></tr>
+    <tr><th>Thinking Budget</th><td><?= $s['thinking_budget'] !== null ? (int) $s['thinking_budget'] . ' tokens' : 'Off' ?></td></tr>
     <tr><th>Tokens (in / out)</th><td><?= ($s['input_tokens'] ?? '—') ?> / <?= ($s['output_tokens'] ?? '—') ?></td></tr>
     <tr><th>Execution Time</th><td><?= $s['exec_time_ms'] !== null ? (int) $s['exec_time_ms'] . ' ms' : '—' ?></td></tr>
     <tr><th>Memory</th><td><?= $s['memory_kb'] !== null ? (int) $s['memory_kb'] . ' KB' : '—' ?></td></tr>

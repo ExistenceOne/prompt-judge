@@ -6,7 +6,7 @@
  * rather than using the official SDK. Contract:
  *   POST https://api.anthropic.com/v1/messages
  *   headers: x-api-key, anthropic-version: 2023-06-01, content-type: application/json
- *   body:    { model, max_tokens, system, messages, [temperature], [top_p] }
+ *   body:    { model, max_tokens, system, messages, [temperature], [thinking] }
  *   reply:   { content: [{type:"text", text}], usage: {input_tokens, output_tokens} }
  */
 
@@ -22,7 +22,7 @@ function claude_generate_code(
     string $languageName,
     string $model,
     ?float $temperature,
-    ?float $topP
+    ?int $thinkingBudget
 ): array {
     $cfg = $GLOBALS['CONFIG']['claude'];
 
@@ -41,16 +41,17 @@ function claude_generate_code(
         ],
     ];
 
-    // Only newer Opus models reject sampling params; include them when supported.
     $models = model_options();
     $supportsSampling = $models[$model]['sampling'] ?? false;
-    if ($supportsSampling) {
-        if ($temperature !== null) {
-            $body['temperature'] = $temperature;
-        }
-        if ($topP !== null) {
-            $body['top_p'] = $topP;
-        }
+    $supportsThinking = $models[$model]['thinking'] ?? false;
+
+    // Extended thinking requires budget_tokens >= 1024 and rejects temperature/top_p
+    // alongside it, so the two are mutually exclusive on the wire.
+    if ($supportsThinking && $thinkingBudget !== null && $thinkingBudget >= 1024) {
+        $body['thinking'] = ['type' => 'enabled', 'budget_tokens' => $thinkingBudget];
+        $body['max_tokens'] = (int) $cfg['max_tokens'] + $thinkingBudget;
+    } elseif ($supportsSampling && $temperature !== null) {
+        $body['temperature'] = $temperature;
     }
 
     $response = claude_http_post($cfg, $body);

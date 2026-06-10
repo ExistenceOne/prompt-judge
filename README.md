@@ -143,7 +143,7 @@ prompt-judge/
         - Displays Problem Description, Input/Output formats, Sample Inputs/Outputs.
         - Lists constraints: Time Limit, Memory Limit, and **Token Limit**.
     - **Problem Submission Page:**
-        - **AI Configurations:** Model selection, Temperature, and Top-p sliders.
+        - **AI Configurations:** Model selection, Temperature, and Thinking Budget sliders.
         - **Target Language:** Dropdown to select which programming language the AI should write the solution in (e.g., Python, C++, Java).
         - **Prompt Input:** A large text area for the user to write their instructions to the AI.
 - **Judging & Results Pages**

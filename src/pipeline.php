@@ -22,7 +22,7 @@ function run_submission(
     int $languageId,
     string $model,
     ?float $temperature,
-    ?float $topP,
+    ?int $thinkingBudget,
     string $prompt
 ): int {
     $languageName = judge0_language_name($languageId);
@@ -35,7 +35,7 @@ function run_submission(
         'language_name'    => $languageName,
         'model'            => $model,
         'temperature'      => $temperature,
-        'top_p'            => $topP,
+        'thinking_budget'  => $thinkingBudget,
         'prompt'           => $prompt,
         'generated_code'   => null,
         'input_tokens'     => null,
@@ -50,7 +50,7 @@ function run_submission(
     ];
 
     // 1) Ask Claude to generate the source code.
-    $gen = claude_generate_code($prompt, $languageName, $model, $temperature, $topP);
+    $gen = claude_generate_code($prompt, $languageName, $model, $temperature, $thinkingBudget);
     if (!$gen['ok']) {
         $record['stderr'] = $gen['error'];
         return persist_submission($record);
@@ -159,11 +159,11 @@ function persist_submission(array $r): int
 {
     db_run(
         'INSERT INTO submissions
-            (user_id, problem_id, language_id, language_name, model, temperature, top_p,
+            (user_id, problem_id, language_id, language_name, model, temperature, thinking_budget,
              prompt, generated_code, input_tokens, output_tokens, code_size, result,
              exec_time_ms, memory_kb, judge0_status_id, compile_output, stderr)
          VALUES
-            (:user_id, :problem_id, :language_id, :language_name, :model, :temperature, :top_p,
+            (:user_id, :problem_id, :language_id, :language_name, :model, :temperature, :thinking_budget,
              :prompt, :generated_code, :input_tokens, :output_tokens, :code_size, :result,
              :exec_time_ms, :memory_kb, :judge0_status_id, :compile_output, :stderr)',
         $r

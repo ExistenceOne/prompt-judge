@@ -4,11 +4,11 @@ require __DIR__ . '/../src/bootstrap.php';
 render_header('홈');
 ?>
 <section class="hero">
-    <h1>코드가 아닌 <em>프롬프트</em>로 문제를 해결하세요.</h1>
+    <img class="hero-logo" src="<?= e(url('assets/logo.png')) ?>" alt="Prompt Judge 로고">
+    <h1>이제는 AI가 코딩하는 시대</h1>
     <p class="lead">
-        프롬프트 저지는 AI 기반 온라인 저지입니다. 손으로 솔루션을 직접 작성하는 대신
-        <strong>프롬프트</strong>를 작성하세요. Claude가 이를 프로그램으로 변환한 뒤, Judge0가
-        컴파일하고 숨겨진 테스트 케이스를 실행합니다.
+        프롬프트 저지는 <strong>AI 프롬프트 기반 온라인 저지</strong>입니다.<br>
+        직접 코딩하는 대신 프롬프트를 작성하세요.<br>
     </p>
     <div class="hero-actions">
         <a class="btn btn-primary" href="<?= e(url('problems.php')) ?>">문제 둘러보기</a>

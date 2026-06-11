@@ -475,3 +475,5 @@ composer.lock
 ##### Prompt Judge
 # Real secrets (DB creds, Claude + Judge0 keys). Use config/config.example.php as the template.
 /config/config.php
+
+/private/

@@ -35,12 +35,10 @@ render_header('채점 #' . $s['id']);
     <tr><th>사용자</th><td><?= e($s['username']) ?></td></tr>
     <tr><th>모델</th><td><?= e($s['model']) ?></td></tr>
     <tr><th>언어</th><td><?= e($s['language_name']) ?></td></tr>
-    <tr><th>Temperature</th><td><?= e((string) ($s['temperature'] ?? '—')) ?></td></tr>
-    <tr><th>Thinking Budget</th><td><?= $s['thinking_budget'] !== null ? (int) $s['thinking_budget'] . ' tokens' : 'Off' ?></td></tr>
-    <tr><th>토큰 (입력 / 출력)</th><td><?= ($s['input_tokens'] ?? '—') ?> / <?= ($s['output_tokens'] ?? '—') ?></td></tr>
+    <tr><th>토큰 (I/O)</th><td><?= ($s['input_tokens'] ?? '—') ?> / <?= ($s['output_tokens'] ?? '—') ?></td></tr>
     <tr><th>실행 시간</th><td><?= $s['exec_time_ms'] !== null ? (int) $s['exec_time_ms'] . ' ms' : '—' ?></td></tr>
     <tr><th>메모리</th><td><?= $s['memory_kb'] !== null ? (int) $s['memory_kb'] . ' KB' : '—' ?></td></tr>
-    <tr><th>코드 크기</th><td><?= $s['code_size'] !== null ? (int) $s['code_size'] . ' 바이트' : '—' ?></td></tr>
+    <tr><th>코드 크기</th><td><?= $s['code_size'] !== null ? (int) $s['code_size'] . ' B' : '—' ?></td></tr>
     <?php if ($s['judge0_status_id'] !== null): ?>
         <tr><th>Judge0 상태</th><td><?= e(judge0_status_text((int) $s['judge0_status_id'])) ?></td></tr>
     <?php endif; ?>

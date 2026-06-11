@@ -12,7 +12,7 @@ INSERT INTO users (username, password_hash, name, email, affiliation, is_dark) V
 SET @u_admin = LAST_INSERT_ID();
 
 INSERT INTO users (username, password_hash, name, email, affiliation, is_dark) VALUES
-    ('yoonjae', '$2y$10$jIQUrMi2FAL9aDtK9hr5vujPjcLP6KW.E/qsyj9rspDnekUwSneS6', '조윤재', 'yoonjae@example.com', '한국대학교', 1);
+    ('yoonjae', '$2y$10$jIQUrMi2FAL9aDtK9hr5vujPjcLP6KW.E/qsyj9rspDnekUwSneS6', '김윤재', 'yoonjae@example.com', '한국기술교육대학교', 1);
 SET @u_yoonjae = LAST_INSERT_ID();
 
 INSERT INTO users (username, password_hash, name, email, affiliation, is_dark) VALUES
@@ -24,7 +24,7 @@ INSERT INTO users (username, password_hash, name, email, affiliation, is_dark) V
 SET @u_junho = LAST_INSERT_ID();
 
 INSERT INTO users (username, password_hash, name, email, affiliation, is_dark) VALUES
-    ('soeun', '$2y$10$jIQUrMi2FAL9aDtK9hr5vujPjcLP6KW.E/qsyj9rspDnekUwSneS6', '박소은', 'soeun@example.com', '한국대학교', 0);
+    ('soeun', '$2y$10$jIQUrMi2FAL9aDtK9hr5vujPjcLP6KW.E/qsyj9rspDnekUwSneS6', '박소은', 'soeun@example.com', '한국기술교육대학교', 0);
 SET @u_soeun = LAST_INSERT_ID();
 
 INSERT INTO users (username, password_hash, name, email, affiliation, is_dark) VALUES

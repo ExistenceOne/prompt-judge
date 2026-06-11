@@ -22,16 +22,12 @@ $languages = judge0_languages();
 $form = [
     'model'           => array_key_first($models),
     'language_id'     => 71, // Python (3.8.1)
-    'temperature'     => '1.0',
-    'thinking_budget' => '0',
     'prompt'          => '',
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form['model']           = post('model', $form['model']);
     $form['language_id']     = (int) post('language_id', (string) $form['language_id']);
-    $form['temperature']     = post('temperature', $form['temperature']);
-    $form['thinking_budget'] = post('thinking_budget', $form['thinking_budget']);
     $form['prompt']          = post('prompt');
 
     $errors = [];
@@ -42,11 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = '올바른 대상 언어를 선택해 주세요.';
     }
     if ($form['prompt'] === '') {
-        $errors[] = '프롬프트는 비워둘 수 없습니다.';
-    }
-    $thinkingBudget = is_numeric($form['thinking_budget']) ? (int) $form['thinking_budget'] : 0;
-    if ($thinkingBudget !== 0 && $thinkingBudget < 1024) {
-        $errors[] = 'Thinking budget must be 0 (off) or at least 1024 tokens.';
+        $errors[] = 'Your prompt cannot be empty.';
     }
 
     if (!$errors) {
@@ -56,8 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $problem,
             $form['language_id'],
             $form['model'],
-            is_numeric($form['temperature']) ? (float) $form['temperature'] : null,
-            $thinkingBudget !== 0 ? $thinkingBudget : null,
+            1.0,
+            null,
             $form['prompt']
         );
         redirect('judging.php?id=' . $submissionId);
@@ -97,21 +89,6 @@ render_header('제출 · ' . $problem['title']);
             </select>
         </label>
     </div>
-
-    <div class="grid-2">
-        <label>Temperature: <output id="temp-val"><?= e($form['temperature']) ?></output>
-            <input type="range" name="temperature" min="0" max="1" step="0.05"
-                   value="<?= e($form['temperature']) ?>" oninput="document.getElementById('temp-val').textContent=this.value">
-        </label>
-        <label>Thinking budget (tokens): <output id="budget-val"><?= e($form['thinking_budget']) ?></output>
-            <input type="range" name="thinking_budget" min="0" max="12000" step="1024"
-                   value="<?= e($form['thinking_budget']) ?>" oninput="document.getElementById('budget-val').textContent=this.value">
-        </label>
-    </div>
-    <p class="muted small">
-        Note: 0 disables extended thinking. Otherwise, at least 1024 tokens are required.
-        When extended thinking is enabled, temperature is ignored (the API does not allow both).
-    </p>
 
     <label>프롬프트
         <textarea name="prompt" rows="12" placeholder="AI가 작성해야 할 프로그램을 설명하세요. 표준 입력(stdin)에서 읽고 표준 출력(stdout)으로 내용을 출력해야 합니다."><?= e($form['prompt']) ?></textarea>
